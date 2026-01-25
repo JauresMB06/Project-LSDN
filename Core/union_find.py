@@ -1,15 +1,3 @@
-"""
-Livestock Disease Surveillance Network (LDSN) - Union-Find (Disjoint Set)
-
-Outbreak cluster detection using Disjoint Set Union (DSU) data structure.
-Implements Path Compression and Union by Rank for O(α(n)) near-constant time.
-
-Designed for epidemiological cluster detection across Cameroon's regions.
-
-Author: LDSN Development Team
-Version: 2.0.0
-"""
-
 from typing import Dict, List, Optional, Set
 
 
@@ -36,10 +24,19 @@ class OutbreakCluster:
     
     Uses Path Compression and Union by Rank optimizations.
     
+    This class implements the Data Layer for the 3-Tier Architecture:
+        - Receives cluster requests from Service Layer (LDSNService)
+        - Returns cluster membership and connections
+        - Hides DSU algorithmic complexity
+    
     Attributes:
         parent: Maps each element to its parent
         rank: Used for Union by Rank
         cluster_size: Tracks size of each cluster
+        _num_clusters: Current number of clusters
+    
+    Author: LDSN Development Team
+    Version: 3.0.0
     """
     
     # Class-level constants
@@ -127,6 +124,7 @@ class OutbreakCluster:
             raise KeyError(f"Location not found: {location}")
         
         # Path compression: make every node point directly to root
+        # This gives O(α(n)) amortized time complexity
         if self.parent[location] != location:
             self.parent[location] = self.find(self.parent[location])
         
@@ -155,7 +153,7 @@ class OutbreakCluster:
         if root_a == root_b:
             return False  # Already in the same cluster
         
-        # Union by Rank
+        # Union by Rank - attach shorter tree to taller tree
         if self.rank[root_a] < self.rank[root_b]:
             self.parent[root_a] = root_b
             self.cluster_size[root_b] += self.cluster_size[root_a]
@@ -163,6 +161,7 @@ class OutbreakCluster:
             self.parent[root_b] = root_a
             self.cluster_size[root_a] += self.cluster_size[root_b]
         else:
+            # Equal rank - arbitrarily choose one and increment rank
             self.parent[root_a] = root_b
             self.rank[root_b] += 1
             self.cluster_size[root_b] += self.cluster_size[root_a]
@@ -237,6 +236,15 @@ class OutbreakCluster:
         """
         return self._num_clusters
     
+    def get_all_locations(self) -> List[str]:
+        """
+        Get all locations in the data structure.
+        
+        Returns:
+            List of all location names
+        """
+        return list(self.parent.keys())
+    
     def __len__(self) -> int:
         """Return the number of elements in the data structure."""
         return len(self.parent)
@@ -244,6 +252,10 @@ class OutbreakCluster:
     def __contains__(self, location: str) -> bool:
         """Check if a location exists in the data structure."""
         return location in self.parent
+    
+    def __repr__(self) -> str:
+        """Return string representation."""
+        return f"OutbreakCluster(locations={len(self)}, clusters={self._num_clusters})"
 
 
 # ============================================================================
@@ -252,11 +264,12 @@ class OutbreakCluster:
 
 # Regional connections for Cameroon
 # These represent epidemiological links between regions
+# Location names use proper accents (Ngaoundéré, Mbé, Yaoundé)
 
-ADAMawa_CONNECTIONS = [
-    ("Ngaoundere", "Tibati"),
-    ("Ngaoundere", "Mbere"),
-    ("Tibati", "Mbere"),
+ADAMAWA_CONNECTIONS = [
+    ("Ngaoundéré", "Tibati"),
+    ("Ngaoundéré", "Mbé"),
+    ("Tibati", "Mbé"),
 ]
 
 FAR_NORTH_CONNECTIONS = [
@@ -264,17 +277,28 @@ FAR_NORTH_CONNECTIONS = [
     ("Maroua", "Mora"),
     ("Kousseri", "Mora"),
     ("Mora", "Mindif"),
+    ("Logone Floodplain", "Mindif"),
+    ("Maroua", "Logone Floodplain"),
 ]
 
 WEST_REGION_CONNECTIONS = [
     ("Bafoussam", "Bamenda"),
     ("Bafoussam", "Dschang"),
     ("Bamenda", "Dschang"),
+    ("Bafoussam", "Bamendjou"),
+]
+
+CENTRE_CONNECTIONS = [
+    ("Yaoundé", "Edea"),
 ]
 
 CROSS_REGION_CONNECTIONS = [
-    ("Ngaoundere", "Maroua"),  # Adamawa to Far North
-    ("Bafoussam", "Yaounde"),  # West to Centre
+    ("Ngaoundéré", "Maroua"),    # Adamawa to Far North
+    ("Ngaoundéré", "Garoua"),    # Adamawa to North
+    ("Bafoussam", "Yaoundé"),    # West to Centre
+    ("Garoua", "Maroua"),        # North to Far North
+    ("Bertoua", "Yaoundé"),      # East to Centre
+    ("Bertoua", "Ngaoundéré"),   # East to Adamawa
 ]
 
 
@@ -284,33 +308,122 @@ def create_cameroon_outbreak_clusters(
     """
     Create a Union-Find structure pre-configured for Cameroon regions.
     
+    This factory function creates an OutbreakCluster with:
+        - All major livestock hub locations
+        - Regional epidemiological connections
+        - Cross-regional transhumance corridors
+    
     Args:
         initial_locations: Optional list of additional locations to include
         
     Returns:
         Configured OutbreakCluster instance
+    
+    Service Layer Integration:
+        - Used by LDSNService.__init__()
+        - Provides cluster detection for alert priority escalation
+    
+    Author: LDSN Development Team
+    Version: 3.0.0
     """
     # Default locations if none provided
     if initial_locations is None:
         initial_locations = []
     
-    # Add all known Cameroon locations
+    # Add all known Cameroon locations with proper accents
     locations = set(initial_locations)
-    locations.update(["Ngaoundere", "Maroua", "Yaounde", "Bafoussam", "Bamenda"])
-    locations.update(["Tibati", "Mbere", "Kousseri", "Mora", "Mindif", "Dschang"])
     
+    # Adamawa Region
+    locations.update(["Ngaoundéré", "Tibati", "Mbé"])
+    
+    # Far North Region
+    locations.update(["Maroua", "Kousseri", "Mora", "Mindif", "Logone Floodplain", "Maga"])
+    
+    # West Region
+    locations.update(["Bafoussam", "Dschang", "Bamendjou"])
+    
+    # Northwest Region
+    locations.update(["Bamenda"])
+    
+    # Centre Region
+    locations.update(["Yaoundé", "Edea"])
+    
+    # North Region
+    locations.update(["Garoua"])
+    
+    # East Region
+    locations.update(["Bertoua"])
+    
+    # Create the cluster
     cluster = OutbreakCluster(list(locations))
     
     # Add regional connections
     for loc_a, loc_b in (
-        ADAMawa_CONNECTIONS + 
+        ADAMAWA_CONNECTIONS + 
         FAR_NORTH_CONNECTIONS + 
-        WEST_REGION_CONNECTIONS + 
+        WEST_REGION_CONNECTIONS +
+        CENTRE_CONNECTIONS +
         CROSS_REGION_CONNECTIONS
     ):
         cluster.union(loc_a, loc_b)
     
     return cluster
+
+
+# ============================================================================
+# Cluster Analysis Utilities
+# ============================================================================
+
+def get_cluster_risk_score(
+    cluster: OutbreakCluster,
+    risk_data: Dict[str, float]
+) -> float:
+    """
+    Calculate the total risk score for a cluster.
+    
+    Args:
+        cluster: OutbreakCluster instance
+        risk_data: Dict mapping locations to risk scores
+        
+    Returns:
+        Total risk score for the cluster
+    """
+    total_risk = 0.0
+    for location in cluster.get_all_locations():
+        total_risk += risk_data.get(location, 0.0)
+    return total_risk
+
+
+def find_connected_zvscc_stations(
+    cluster: OutbreakCluster,
+    location: str
+) -> List[str]:
+    """
+    Find all ZVSCC stations connected to a location.
+    
+    Used for emergency response routing.
+    
+    Args:
+        cluster: OutbreakCluster instance
+        location: Starting location
+        
+    Returns:
+        List of connected ZVSCC station names
+    """
+    connected_cluster = cluster.get_cluster(location)
+    zvscc_stations = []
+    
+    # ZVSCC stations (hardcoded for now, could be from config)
+    zvscc_locations = {
+        "Ngaoundéré", "Maroua", "Kousseri", "Yaoundé",
+        "Bafoussam", "Bamenda", "Dschang", "Garoua", "Bertoua"
+    }
+    
+    for loc in connected_cluster:
+        if loc in zvscc_locations:
+            zvscc_stations.append(loc)
+    
+    return zvscc_stations
 
 
 # ============================================================================
@@ -363,4 +476,39 @@ def detect_outbreak_clusters(
     for conn in connections:
         cluster.union(conn.location_a, conn.location_b)
     return cluster
+
+
+# ============================================================================
+# Example Usage
+# ============================================================================
+
+if __name__ == "__main__":
+    print("=" * 60)
+    print("LDSN Cameroon - Outbreak Cluster Detection Demo")
+    print("=" * 60)
+    
+    # Create Cameroon outbreak clusters
+    clusters = create_cameroon_outbreak_clusters()
+    
+    print(f"\n✓ Cluster system initialized")
+    print(f"✓ Total locations: {len(clusters)}")
+    print(f"✓ Active clusters: {clusters.get_num_clusters()}")
+    
+    # Display clusters
+    print("\n--- Current Outbreak Clusters ---")
+    all_clusters = clusters.get_clusters()
+    for i, cluster in enumerate(all_clusters, 1):
+        print(f"Cluster {i}: {sorted(cluster)}")
+    
+    # Check connectivity
+    print("\n--- Epidemiological Connections ---")
+    print(f"Ngaoundéré ↔ Maroua: {clusters.connected('Ngaoundéré', 'Maroua')}")
+    print(f"Bafoussam ↔ Yaoundé: {clusters.connected('Bafoussam', 'Yaoundé')}")
+    print(f"Tibati ↔ Mbé: {clusters.connected('Tibati', 'Mbé')}")
+    
+    # Cluster size
+    print("\n--- Cluster Sizes ---")
+    print(f"Ngaoundéré cluster: {clusters.get_cluster_size('Ngaoundéré')} locations")
+    print(f"Maroua cluster: {clusters.get_cluster_size('Maroua')} locations")
+    print(f"Bafoussam cluster: {clusters.get_cluster_size('Bafoussam')} locations")
 

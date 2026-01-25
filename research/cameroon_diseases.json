@@ -1,0 +1,208 @@
+{
+  "metadata": {
+    "source": "MINEPIA, WHO/OIE, FAO, CDC",
+    "date": "2024",
+    "classification_basis": "MINEPIA Priority Classification + Zoonotic Potential",
+    "total_diseases": 10
+  },
+  "priority_matrix": {
+    "P1": "Critical - Emergency response required",
+    "P2": "High - Urgent response required",
+    "P3": "Moderate - Priority response required",
+    "P4": "Standard - Routine response required",
+    "P5": "Info - Surveillance and monitoring"
+  },
+  "diseases": [
+    {
+      "id": 1,
+      "name": {
+        "english": "Anthrax",
+        "french": "Charbon bactéridien"
+      },
+      "causative_agent": "Bacillus anthracis (bacteria)",
+      "affected_species": ["cattle", "sheep", "goats", "wildlife", "humans"],
+      "zoonotic": true,
+      "zoonotic_level": "High",
+      "cameroon_distribution": "Endemic throughout all regions; outbreaks reported annually in Adamawa, Far North, and North regions",
+      "economic_impact": "High - mortality up to 100% in herbivores, trade restrictions",
+      "clinical_signs": "Sudden death, bleeding from orifices, edematous lesions",
+      "transmission": "Spores in soil, contaminated feed/water",
+      "priority_level": 1,
+      "priority_rationale": "Highest zoonotic priority; requires immediate response; potential for human epidemic; export ban implications"
+    },
+    {
+      "id": 2,
+      "name": {
+        "english": "Highly Pathogenic Avian Influenza",
+        "french": "Influenza Aviaire Hautement Pathogène"
+      },
+      "causative_agent": "Influenza A virus H5N1, H5N8, H7N9",
+      "affected_species": ["poultry", "wild_birds", "humans"],
+      "zoonotic": true,
+      "zoonotic_level": "High",
+      "cameroon_distribution": "Occasional outbreaks in poultry farms near major cities (Yaoundé, Douala, Bafoussam)",
+      "economic_impact": "Very High - 100% mortality in poultry, mass culling, trade bans",
+      "clinical_signs": "Sudden death, respiratory distress, neurological signs, drop in egg production",
+      "transmission": "Direct contact with infected birds, contaminated surfaces",
+      "priority_level": 1,
+      "priority_rationale": "Public health emergency; rapid spread potential; severe economic impact; pandemic risk"
+    },
+    {
+      "id": 3,
+      "name": {
+        "english": "Peste des Petits Ruminants",
+        "french": "Peste des Petits Ruminants"
+      },
+      "causative_agent": "Morbillivirus",
+      "affected_species": ["sheep", "goats", "wild_ruminants"],
+      "zoonotic": false,
+      "zoonotic_level": "No",
+      "cameroon_distribution": "Endemic; affects small ruminant populations throughout Adamawa, North, and Far North regions",
+      "economic_impact": "High - up to 90% morbidity, 50% mortality in naive populations",
+      "clinical_signs": "Fever, nasal/ocular discharge, diarrhea, erosive stomatitis",
+      "transmission": "Direct contact, aerosol, contaminated equipment",
+      "priority_level": 2,
+      "priority_rationale": "Major small ruminant disease; significant economic impact; not zoonotic but high mortality"
+    },
+    {
+      "id": 4,
+      "name": {
+        "english": "Foot and Mouth Disease",
+        "french": "Fièvre Aphteuse"
+      },
+      "causative_agent": "Aphthovirus (7 serotypes)",
+      "affected_species": ["cattle", "pigs", "sheep", "goats", "wild_artiodactyls"],
+      "zoonotic": false,
+      "zoonotic_level": "No (rare human cases reported)",
+      "cameroon_distribution": "Endemic in all cattle-rearing regions; Adamawa and Far North most affected",
+      "economic_impact": "Very High - production losses, trade restrictions, vaccination costs",
+      "clinical_signs": "Fever, vesicles in mouth and on feet, lameness, drop in milk production",
+      "transmission": "Aerosol, direct contact, fomites, semen",
+      "priority_level": 2,
+      "priority_rationale": "Most important transboundary animal disease; severe economic impact; trade implications"
+    },
+    {
+      "id": 5,
+      "name": {
+        "english": "Rabies",
+        "french": "Rage"
+      },
+      "causative_agent": "Lyssavirus",
+      "affected_species": ["dogs", "cats", "cattle", "wildlife", "humans"],
+      "zoonotic": true,
+      "zoonotic_level": "High (100% fatal once symptomatic)",
+      "cameroon_distribution": "Present throughout Cameroon; highest incidence in urban areas (Yaoundé, Douala) and rural dog populations",
+      "economic_impact": "Moderate - post-exposure treatment costs, livestock losses",
+      "clinical_signs": "Behavioral changes, aggression, paralysis, hydrophobia",
+      "transmission": "Bite from infected animal, scratches, saliva contact",
+      "priority_level": 2,
+      "priority_rationale": "Fatal zoonotic disease; requires immediate post-exposure prophylaxis; dog-mediated transmission"
+    },
+    {
+      "id": 6,
+      "name": {
+        "english": "Brucellosis",
+        "french": "Brucellose"
+      },
+      "causative_agent": "Brucella abortus (cattle), B. melitensis (goats/sheep), B. suis (pigs)",
+      "affected_species": ["cattle", "sheep", "goats", "pigs", "humans"],
+      "zoonotic": true,
+      "zoonotic_level": "High",
+      "cameroon_distribution": "Endemic in Adamawa and West regions; occupational disease in livestock handlers",
+      "economic_impact": "Moderate - abortions, reduced fertility, reduced milk production",
+      "clinical_signs": "Abortion, retained placenta, reduced fertility, orchitis",
+      "transmission": "Contact with aborted tissues, unpasteurized dairy, inhalation",
+      "priority_level": 2,
+      "priority_rationale": "Significant zoonosis; occupational hazard for veterinarians and farmers; chronic human disease"
+    },
+    {
+      "id": 7,
+      "name": {
+        "english": "Rift Valley Fever",
+        "french": "Fièvre de la Vallée du Rift"
+      },
+      "causative_agent": "Phlebovirus",
+      "affected_species": ["cattle", "sheep", "goats", "humans"],
+      "zoonotic": true,
+      "zoonotic_level": "High",
+      "cameroon_distribution": "Occasional outbreaks during rainy seasons; potential for expansion to all regions",
+      "economic_impact": "High - abortion storms, high mortality in young animals",
+      "clinical_signs": "Fever, hepatitis, hemorrhagic disease, abortions",
+      "transmission": "Mosquito bites, contact with infected tissues, aerosol",
+      "priority_level": 2,
+      "priority_rationale": "Emerging zoonotic disease; epidemic potential; severe human disease including encephalitis"
+    },
+    {
+      "id": 8,
+      "name": {
+        "english": "Contagious Bovine Pleuropneumonia",
+        "french": "Péripneumonie Contagieuse Bovine"
+      },
+      "causative_agent": "Mycoplasma mycoides subsp. mycoides",
+      "affected_species": ["cattle", "wild_bovids"],
+      "zoonotic": false,
+      "zoonotic_level": "No",
+      "cameroon_distribution": "Endemic in Adamawa, North, and Far North regions; major constraint to cattle production",
+      "economic_impact": "High - chronic disease, weight loss, reduced draft power, mortality up to 50%",
+      "clinical_signs": "Fever, cough, nasal discharge, respiratory distress, pleurisy",
+      "transmission": "Aerosol, direct contact, contaminated equipment",
+      "priority_level": 3,
+      "priority_rationale": "Major cattle disease; chronic economic impact; OIE listed disease; trade restrictions"
+    },
+    {
+      "id": 9,
+      "name": {
+        "english": "Newcastle Disease",
+        "french": "Maladie de Newcastle"
+      },
+      "causative_agent": "Avian paramyxovirus type 1",
+      "affected_species": ["poultry", "wild_birds"],
+      "zoonotic": false,
+      "zoonotic_level": "Low (rare conjunctivitis in humans)",
+      "cameroon_distribution": "Endemic throughout Cameroon; backyard poultry most affected",
+      "economic_impact": "High - up to 100% mortality in naive flocks, vaccination costs",
+      "clinical_signs": "Respiratory signs, neurological signs, decreased egg production, torticollis",
+      "transmission": "Aerosol, direct contact, contaminated feed/water",
+      "priority_level": 3,
+      "priority_rationale": "Major poultry disease; high mortality; affects food security; not zoonotic but important"
+    },
+    {
+      "id": 10,
+      "name": {
+        "english": "African Swine Fever",
+        "french": "Peste Porcine Africaine"
+      },
+      "causative_agent": "Asfivirus (DNA virus)",
+      "affected_species": ["pigs", "wild_boars"],
+      "zoonotic": false,
+      "zoonotic_level": "No",
+      "cameroon_distribution": "Endemic in Southern and Centre regions; sporadic outbreaks reported",
+      "economic_impact": "Very High - up to 100% mortality, no vaccine, culling required",
+      "clinical_signs": "High fever, hemorrhages, vomiting, diarrhea, abortion",
+      "transmission": "Soft tick bites, direct contact, contaminated pork products",
+      "priority_level": 3,
+      "priority_rationale": "Devastating pig disease; no vaccine; trade implications; significant food security impact"
+    }
+  ],
+  "priority_summary": {
+    "P1_Critical": [
+      {"id": 1, "name": "Anthrax", "zoonotic": true},
+      {"id": 2, "name": "Highly Pathogenic Avian Influenza", "zoonotic": true}
+    ],
+    "P2_High": [
+      {"id": 3, "name": "Peste des Petits Ruminants", "zoonotic": false},
+      {"id": 4, "name": "Foot and Mouth Disease", "zoonotic": false},
+      {"id": 5, "name": "Rabies", "zoonotic": true},
+      {"id": 6, "name": "Brucellosis", "zoonotic": true},
+      {"id": 7, "name": "Rift Valley Fever", "zoonotic": true}
+    ],
+    "P3_Moderate": [
+      {"id": 8, "name": "Contagious Bovine Pleuropneumonia", "zoonotic": false},
+      {"id": 9, "name": "Newcastle Disease", "zoonotic": false},
+      {"id": 10, "name": "African Swine Fever", "zoonotic": false}
+    ]
+  },
+  "zoonotic_diseases_count": 6,
+  "non_zoonotic_diseases_count": 4
+}
+

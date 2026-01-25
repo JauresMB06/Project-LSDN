@@ -1,16 +1,8 @@
-"""
-Livestock Disease Surveillance Network (LDSN) - Segment Tree
 
-Segment tree for efficient range queries on livestock mortality data.
-Implements Point Updates and Range Sum Queries in O(log n) complexity.
 
-Designed for temporal mortality tracking across Cameroon's regions.
-
-Author: LDSN Development Team
-Version: 2.0.0
-"""
-
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
+from datetime import datetime
+from pydantic import BaseModel
 
 
 class SegmentTreeConfig:
@@ -253,21 +245,37 @@ class CameroonMortalityTracker:
     def __init__(self, days: int = 365) -> None:
         """
         Initialize mortality tracker with specified number of days.
-        
+
         Args:
             days: Number of days to track (default: 365)
         """
         self.tree = MortalitySegmentTree(days)
+
+        # Species-specific tracking
+        self.species_list = ['cattle', 'poultry', 'swine', 'sheep', 'goats']
+        self.species_trees = {species: MortalitySegmentTree(days) for species in self.species_list}
+        self.species_affected = {species: 0 for species in self.species_list}
+        self.last_updated = ""
     
-    def record_mortality(self, day: int, count: int) -> None:
+    def record_mortality(self, day: int, count: int, species: Optional[str] = None) -> None:
         """
         Record mortality for a specific day.
-        
+
         Args:
             day: Day number (0-based)
             count: Number of deaths
+            species: Optional species name (cattle, poultry, swine, sheep, goats)
         """
+        # Record in main tree
         self.tree.update(day, count)
+
+        # Record in species-specific tree if species provided
+        if species and species.lower() in self.species_trees:
+            species_key = species.lower()
+            self.species_trees[species_key].update(day, count)
+            self.species_affected[species_key] += count
+
+        self.last_updated = datetime.utcnow().isoformat()
     
     def get_dry_season_mortality(self) -> int:
         """
@@ -290,11 +298,76 @@ class CameroonMortalityTracker:
     def get_total_mortality(self) -> int:
         """
         Get total mortality across all tracked days.
-        
+
         Returns:
             Total mortality count
         """
         return self.tree.get_total()
+
+    def get_species_mortality(self, species: str) -> int:
+        """
+        Get total mortality for a specific species.
+
+        Args:
+            species: Species name (cattle, poultry, swine, sheep, goats)
+
+        Returns:
+            Total mortality count for the species
+        """
+        species_key = species.lower()
+        if species_key not in self.species_trees:
+            raise ValueError(f"Unknown species: {species}")
+        return self.species_trees[species_key].get_total()
+
+    def get_species_seasonal_mortality(self, species: str) -> Dict[str, int]:
+        """
+        Get seasonal mortality breakdown for a specific species.
+
+        Args:
+            species: Species name
+
+        Returns:
+            Dictionary with dry_season and rainy_season mortality
+        """
+        species_key = species.lower()
+        if species_key not in self.species_trees:
+            raise ValueError(f"Unknown species: {species}")
+
+        tree = self.species_trees[species_key]
+        return {
+            'dry_season': tree.query_range(*self.DRY_SEASON_DAYS),
+            'rainy_season': tree.query_range(*self.RAINY_SEASON_DAYS)
+        }
+
+    def get_all_species_data(self) -> List[Dict[str, Any]]:
+        """
+        Get mortality data for all species.
+
+        Returns:
+            List of dictionaries with species mortality data
+        """
+        species_data = []
+        total_mortality = self.get_total_mortality()
+
+        for species in self.species_list:
+            species_mortality = self.get_species_mortality(species)
+            seasonal = self.get_species_seasonal_mortality(species)
+            affected = self.species_affected[species]
+
+            # Calculate mortality rate (simplified)
+            mortality_rate = (species_mortality / max(affected, 1)) * 100 if affected > 0 else 0
+
+            species_data.append({
+                'species': species.capitalize(),
+                'total_mortality': species_mortality,
+                'dry_season_mortality': seasonal['dry_season'],
+                'rainy_season_mortality': seasonal['rainy_season'],
+                'mortality_rate': round(mortality_rate, 1),
+                'affected_animals': affected,
+                'last_updated': self.last_updated
+            })
+
+        return species_data
     
     def bulk_load(self, mortality_data: List[int]) -> None:
         """

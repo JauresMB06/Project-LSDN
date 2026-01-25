@@ -1,14 +1,3 @@
-"""
-Livestock Disease Surveillance Network (LDSN) - Data Persistence
-
-Store-and-Forward persistence layer for remote ZVSCC stations.
-Supports SQLite for structured data and JSON for lightweight caching.
-
-Designed for offline connectivity in Cameroon's Far North Region.
-
-Author: LDSN Development Team
-Version: 2.0.0
-"""
 
 import json
 import sqlite3
@@ -17,6 +6,7 @@ from datetime import datetime
 from typing import Any, Dict, List, Optional, Type, TypeVar
 from contextlib import contextmanager
 from pathlib import Path
+from pydantic import BaseModel
 
 
 # ============================================================================
@@ -469,6 +459,10 @@ class StoreAndForwardManager:
     def mark_reports_synced(self, report_ids: List[int]) -> None:
         """Mark reports as synced."""
         self.db.mark_synced("reports", report_ids)
+
+        # Also clear the cache since reports are now synced
+        # In a real implementation, we might want to update the cache instead of clearing it
+        self.cache.clear("pending_reports")
     
     # -------------------------------------------------------------------------
     # Alert Operations

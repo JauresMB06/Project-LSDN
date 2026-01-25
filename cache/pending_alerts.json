@@ -1,0 +1,25 @@
+{
+  "updated_at": "2026-01-22T00:53:39.338817",
+  "items": [
+    {
+      "id": 7,
+      "disease_name": "anthrax",
+      "location": "Maroua",
+      "priority_level": 1,
+      "reporter_id": "VET-001",
+      "details": {
+        "disease_name": "anthrax",
+        "location": "Maroua",
+        "reporter_id": "VET-001",
+        "priority_level": 1,
+        "priority_name": "P1_CRITICAL",
+        "cluster_boost": 0,
+        "timestamp": 1769043219.214995,
+        "details": {
+          "mortality_count": null,
+          "cluster_boost": 0
+        }
+      }
+    }
+  ]
+}

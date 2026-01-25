@@ -1,12 +1,3 @@
-"""
-Livestock Disease Surveillance Network (LDSN) - Symptom Trie
-
-Prefix tree for standardized symptom taxonomy with O(L) lookup complexity.
-Designed for remote ZVSCC stations in Cameroon's Far North Region.
-
-Author: LDSN Development Team
-Version: 2.0.0
-"""
 
 from typing import Dict, List, Optional
 

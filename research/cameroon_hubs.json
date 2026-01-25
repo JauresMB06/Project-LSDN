@@ -1,0 +1,146 @@
+{
+  "metadata": {
+    "source": "MINEPIA, FAO, Cameroon Ministry of Transport",
+    "date": "2024",
+    "total_hubs": 15,
+    "regions_covered": ["Adamawa", "Far North", "Centre", "West", "Northwest", "South", "East"]
+  },
+  "hubs": [
+    {
+      "name": "Ngaoundéré",
+      "region": "Adamawa",
+      "latitude": 7.3278,
+      "longitude": 13.5536,
+      "type": "livestock_market",
+      "is_zvscc": true,
+      "notes": "Regional capital, major cattle transhumance hub"
+    },
+    {
+      "name": "Maroua",
+      "region": "Far North",
+      "latitude": 10.5909,
+      "longitude": 14.3153,
+      "type": "livestock_market",
+      "is_zvscc": true,
+      "notes": "Regional capital, proximity to Nigerian border"
+    },
+    {
+      "name": "Bafoussam",
+      "region": "West",
+      "latitude": 5.4781,
+      "longitude": 10.4225,
+      "type": "livestock_market",
+      "is_zvscc": true,
+      "notes": "Dairy and poultry production center"
+    },
+    {
+      "name": "Yaoundé",
+      "region": "Centre",
+      "latitude": 3.8480,
+      "longitude": 11.5021,
+      "type": "livestock_market",
+      "is_zvscc": true,
+      "notes": "National capital, main logistics hub"
+    },
+    {
+      "name": "Bamenda",
+      "region": "Northwest",
+      "latitude": 5.9520,
+      "longitude": 10.1579,
+      "type": "livestock_market",
+      "is_zvscc": true,
+      "notes": "Northwest Region livestock trading center"
+    },
+    {
+      "name": "Garoua",
+      "region": "North",
+      "latitude": 9.3018,
+      "longitude": 13.3950,
+      "type": "livestock_market",
+      "is_zvscc": true,
+      "notes": "Northern Region capital, cattle corridor"
+    },
+    {
+      "name": "Maga",
+      "region": "Far North",
+      "latitude": 10.6333,
+      "longitude": 15.4333,
+      "type": "livestock_market",
+      "is_zvscc": false,
+      "notes": "Near Waza Park, floodplain grazing area"
+    },
+    {
+      "name": "Tibati",
+      "region": "Adamawa",
+      "latitude": 6.4667,
+      "longitude": 12.7833,
+      "type": "transhumance_hub",
+      "is_zvscc": false,
+      "notes": "Key transhumance corridor to Far North"
+    },
+    {
+      "name": "Mbé",
+      "region": "Adamawa",
+      "latitude": 7.7667,
+      "longitude": 14.7333,
+      "type": "transhumance_hub",
+      "is_zvscc": false,
+      "notes": "Cattle trading post on transhumance routes"
+    },
+    {
+      "name": "Kousseri",
+      "region": "Far North",
+      "latitude": 12.0783,
+      "longitude": 15.0311,
+      "type": "border_crossing",
+      "is_zvscc": true,
+      "notes": "Chad border crossing, livestock export point"
+    },
+    {
+      "name": "Mora",
+      "region": "Far North",
+      "latitude": 11.0333,
+      "longitude": 14.1500,
+      "type": "border_crossing",
+      "is_zvscc": false,
+      "notes": "Nigeria border crossing, market town"
+    },
+    {
+      "name": "Bamendjou",
+      "region": "West",
+      "latitude": 5.3833,
+      "longitude": 10.3500,
+      "type": "livestock_market",
+      "is_zvscc": false,
+      "notes": "Dairy farming area near Bafoussam"
+    },
+    {
+      "name": "Dschang",
+      "region": "West",
+      "latitude": 5.4444,
+      "longitude": 9.9917,
+      "type": "livestock_market",
+      "is_zvscc": true,
+      "notes": "Western Highlands livestock center"
+    },
+    {
+      "name": "Mindif",
+      "region": "Far North",
+      "latitude": 10.7500,
+      "longitude": 14.6167,
+      "type": "transhumance_hub",
+      "is_zvscc": false,
+      "notes": "Seasonal grazing area, near Maroua"
+    },
+    {
+      "name": "Bertoua",
+      "region": "East",
+      "latitude": 4.5844,
+      "longitude": 13.6846,
+      "type": "livestock_market",
+      "is_zvscc": true,
+      "notes": "Eastern Region capital, cattle corridor"
+    }
+  ]
+}
+

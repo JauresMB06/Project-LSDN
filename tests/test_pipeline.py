@@ -163,24 +163,24 @@ class TestOutbreakClusters:
     def test_cluster_union(self, clusters: OutbreakCluster):
         """Test merging clusters using union operation."""
         initial_clusters = clusters.get_num_clusters()
-        
+
         # Add a new location and connect it
         clusters.add_location("TestLocation")
-        clusters.union("Ngaoundere", "TestLocation")
-        
+        clusters.union("Ngaoundéré", "TestLocation")
+
         # Should still be connected (already in same region)
-        assert clusters.connected("Ngaoundere", "TestLocation") is True
+        assert clusters.connected("Ngaoundéré", "TestLocation") is True
     
     def test_cluster_find_with_path_compression(self, clusters: OutbreakCluster):
         """Test that find uses path compression."""
         # Find should work and compress path
-        root = clusters.find("Ngaoundere")
+        root = clusters.find("Ngaoundéré")
         assert root is not None
     
     def test_cluster_size_tracking(self, clusters: OutbreakCluster):
         """Test cluster size is correctly tracked."""
         # Get cluster size for a known location
-        size = clusters.get_cluster_size("Ngaoundere")
+        size = clusters.get_cluster_size("Ngaoundéré")
         assert size >= 1
     
     def test_cluster_get_clusters(self, clusters: OutbreakCluster):
@@ -193,9 +193,9 @@ class TestOutbreakClusters:
     def test_cameroon_regional_connections(self, clusters: OutbreakCluster):
         """Test that Cameroon regional connections are configured."""
         # Adamawa locations should be connected
-        assert clusters.connected("Ngaoundere", "Tibati")
-        assert clusters.connected("Ngaoundere", "Mbere")
-        
+        assert clusters.connected("Ngaoundéré", "Tibati")
+        assert clusters.connected("Ngaoundéré", "Mbé")
+
         # Far North locations should be connected
         assert clusters.connected("Maroua", "Kousseri")
 
@@ -210,28 +210,28 @@ class TestTranshumanceRouting:
     def test_network_initialization(self, network: TranshumanceGraph):
         """Test network graph initialization."""
         assert len(network) > 0
-        assert "Ngaoundere" in network
+        assert "Ngaoundéré" in network
         assert "Maroua" in network
     
     def test_route_calculation_dry_season(self, network: TranshumanceGraph):
         """Test route calculation during dry season."""
         path, weight = network.calculate_safe_route(
-            "Ngaoundere", "Maroua", is_rainy_season=False
+            "Ngaoundéré", "Maroua", is_rainy_season=False
         )
-        
-        assert path[0] == "Ngaoundere"
+
+        assert path[0] == "Ngaoundéré"
         assert path[-1] == "Maroua"
         assert weight > 0
     
     def test_route_calculation_rainy_season(self, network: TranshumanceGraph):
         """Test route calculation during rainy season has higher weight."""
         path_dry, weight_dry = network.calculate_safe_route(
-            "Ngaoundere", "Maroua", is_rainy_season=False
+            "Ngaoundéré", "Maroua", is_rainy_season=False
         )
         path_rainy, weight_rainy = network.calculate_safe_route(
-            "Ngaoundere", "Maroua", is_rainy_season=True
+            "Ngaoundéré", "Maroua", is_rainy_season=True
         )
-        
+
         # Rainy season should have higher effective weight
         assert weight_rainy > weight_dry
     
@@ -239,22 +239,22 @@ class TestTranshumanceRouting:
         """Test 2.5× multiplier for Adamawa unpaved tracks during rainy season."""
         # Compare weights for routes through Adamawa
         dry_path, dry_weight = network.calculate_safe_route(
-            "Ngaoundere", "Maroua", is_rainy_season=False
+            "Ngaoundéré", "Maroua", is_rainy_season=False
         )
         rainy_path, rainy_weight = network.calculate_safe_route(
-            "Ngaoundere", "Maroua", is_rainy_season=True
+            "Ngaoundéré", "Maroua", is_rainy_season=True
         )
-        
+
         # The increase should be significant (at least 2.5× on track segments)
         increase_ratio = rainy_weight / dry_weight
         assert increase_ratio > 1.0
     
     def test_route_reconstruction(self, network: TranshumanceGraph):
         """Test that route is correctly reconstructed."""
-        path, _ = network.calculate_safe_route("Bafoussam", "Yaounde")
-        
+        path, _ = network.calculate_safe_route("Bafoussam", "Yaoundé")
+
         assert path[0] == "Bafoussam"
-        assert path[-1] == "Yaounde"
+        assert path[-1] == "Yaoundé"
         # Path should have at least 2 nodes (start and end)
         assert len(path) >= 2
     
@@ -265,8 +265,8 @@ class TestTranshumanceRouting:
     
     def test_analyze_seasonal_impact(self, network: TranshumanceGraph):
         """Test seasonal impact analysis function."""
-        analysis = analyze_seasonal_impact(network, "Ngaoundere", "Maroua")
-        
+        analysis = analyze_seasonal_impact(network, "Ngaoundéré", "Maroua")
+
         assert "dry_season" in analysis
         assert "rainy_season" in analysis
         assert "impact" in analysis
@@ -315,17 +315,17 @@ class TestAlertTriage:
         # P2 diseases
         assert get_disease_priority("peste des petits ruminants") == PriorityLevel.P2_HIGH
         assert get_disease_priority("foot and mouth disease") == PriorityLevel.P2_HIGH
-        
+
         # Default for unknown diseases
         assert get_disease_priority("unknown disease") == PriorityLevel.P4_STANDARD
     
     def test_pop_highest_priority(self, triage: AlertTriage):
         """Test that pop returns highest priority alert."""
         # Push alerts with different priorities
-        triage.push_alert("helminthosis", "Yaounde", "VET-001")  # P5
+        triage.push_alert("helminthosis", "Yaoundé", "VET-001")  # P5
         triage.push_alert("anthrax", "Maroua", "VET-002")  # P1
         triage.push_alert("newcastle disease", "Bafoussam", "VET-003")  # P3
-        
+
         # Pop should return P1 first
         alert = triage.pop_highest_priority()
         assert alert.priority_level == PriorityLevel.P1_CRITICAL
@@ -337,8 +337,8 @@ class TestAlertTriage:
         
         triage.push_alert("anthrax", "Maroua", "VET-001")
         triage.push_alert("highly pathogenic avian influenza", "Bafoussam", "VET-002")
-        triage.push_alert("peste des petits ruminants", "Ngaoundere", "VET-003")
-        
+        triage.push_alert("peste des petits ruminants", "Ngaoundéré", "VET-003")
+
         assert triage.get_critical_count() == 2
 
 
@@ -474,8 +474,8 @@ class TestEndToEndPipeline:
         
         # Step 3: Route Recalculation (with outbreak risk)
         service.update_location_risk("Maroua", 100.0)
-        route = service.calculate_route("Ngaoundere", "Maroua", is_rainy_season=False)
-        assert route.path[0] == "Ngaoundere"
+        route = service.calculate_route("Ngaoundéré", "Maroua", is_rainy_season=False)
+        assert route.path[0] == "Ngaoundéré"
         assert route.path[-1] == "Maroua"
         
         # Step 4: Priority Alert Triage
@@ -584,9 +584,9 @@ class TestErrorHandling:
         """Test Union-Find error handling for invalid locations."""
         with pytest.raises(KeyError):
             clusters.find("NonexistentLocation")
-        
+
         with pytest.raises(KeyError):
-            clusters.connected("Ngaoundere", "NonexistentLocation")
+            clusters.connected("Ngaoundéré", "NonexistentLocation")
 
 
 # ============================================================================

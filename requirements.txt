@@ -1,0 +1,92 @@
+# LDSN Project 7 - Dependencies
+# Livestock Disease Surveillance Network for Cameroon
+
+# Core Dependencies
+# =================
+
+# Web Framework
+fastapi>=0.100.0,<0.129.0
+uvicorn>=0.24.0
+
+# CLI Framework
+typer>=0.9.0
+click>=8.1.0
+
+# Database
+sqlalchemy>=2.0.0
+
+# Data Validation
+pydantic>=2.5.0
+
+# Testing
+pytest>=7.4.0
+pytest-cov>=4.1.0
+
+# Utilities
+python-dateutil>=2.8.0
+
+# ============================================================
+# Installation Instructions
+# ============================================================
+
+# Method 1: Using pip (recommended)
+# ---------------------------------
+# Create a virtual environment and install:
+#
+# python3 -m venv venv
+# source venv/bin/activate  # On Windows: venv\Scripts\activate
+# pip install -r requirements.txt
+#
+# Or install individually:
+# pip install fastapi uvicorn typer sqlalchemy pydantic pytest
+
+# Method 2: Using conda
+# ---------------------
+# conda install -c conda-forge python=3.10
+# pip install fastapi uvicorn typer sqlalchemy pydantic pytest
+
+# Method 3: System packages (Ubuntu/Debian)
+# ------------------------------------------
+# sudo apt update
+# sudo apt install python3 python3-pip python3-venv
+# pip install -r requirements.txt
+
+# ============================================================
+# Running the Application
+# ============================================================
+
+# CLI Commands:python3
+#  main.py report anthrax Maroua VET-001 -m 5
+# python3 main.py autocomplete peste
+# python3 main.py route Ngaoundere Maroua --rainy
+# python3 main.py clusters
+# python3 main.py alerts --critical
+# python3 main.py sync
+# python3 main.py stats
+
+# Web API:
+# python3 main.py web
+# Then open http://localhost:8000/docs for interactive API docs
+
+# Run Tests:
+# python3 run_tests.py
+# python3 -m pytest tests/ -v
+
+# ============================================================
+# Project Structure
+# ============================================================
+#
+# Core/                    # Algorithmic Core
+#   Trie.py               # Symptom autocomplete (O(L))
+#   segment_tree.py       # Mortality tracking (O(log n))
+#   union_find.py         # Cluster detection (O(alpha(n)))
+#   priority_queue.py     # Alert triage (O(log n))
+#   Transhumance.py       # Route optimization (O(E log V))
+#   service.py            # 3-Tier Service Gateway
+#   database_manager.py   # SQLAlchemy + Store-and-Forward
+#
+# tests/                   # Testing Suite
+# research/                # Research & Documentation
+# main.py                  # Application Entry Point
+# run_tests.py            # Test Runner
+

@@ -8,14 +8,14 @@ print("1. Trie: OK")
 
 from Core.Transhumance import get_cameroon_network
 n = get_cameroon_network()
-_, w1 = n.calculate_safe_route("Ngaoundere", "Maroua", False)
-_, w2 = n.calculate_safe_route("Ngaoundere", "Maroua", True)
+_, w1 = n.calculate_safe_route("Ngaoundéré", "Maroua", False)
+_, w2 = n.calculate_safe_route("Ngaoundéré", "Maroua", True)
 assert w2 > w1
 print("2. Transhumance: OK")
 
 from Core.union_find import create_cameroon_outbreak_clusters
 c = create_cameroon_outbreak_clusters()
-assert c.connected("Ngaoundere", "Tibati")
+assert c.connected("Ngaoundéré", "Tibati")
 print("3. Union-Find: OK")
 
 from Core.priority_queue import AlertTriage
