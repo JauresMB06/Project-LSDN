@@ -61,7 +61,7 @@ export function MapContainer({ reports, clusters = [] }: MapContainerProps) {
 
   if (!L) {
     return (
-      <Card className="relative flex h-full min-h-[400px] flex-col overflow-hidden border-border/50 bg-card/50 p-0">
+      <Card className="relative flex h-[500px] flex-col overflow-hidden border-border/50 bg-card/50 p-0">
         <div className="flex flex-1 items-center justify-center">
           <div className="text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
@@ -73,7 +73,7 @@ export function MapContainer({ reports, clusters = [] }: MapContainerProps) {
   }
 
   return (
-    <Card className="relative flex h-full min-h-[400px] flex-col overflow-hidden border-border/50 bg-card/50 p-0">
+    <Card className="relative flex h-[500px] flex-col overflow-hidden border-border/50 bg-card/50 p-0">
       {/* Floating Search Bar */}
       <div className="absolute left-4 right-4 top-4 z-10">
         <div className="relative max-w-xs">

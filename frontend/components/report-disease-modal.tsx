@@ -58,6 +58,7 @@ const formSchema = z.object({
   affectedCount: z.coerce.number().min(1, 'At least 1 affected'),
   mortalityCount: z.coerce.number().min(0, 'Cannot be negative'),
   priority: z.enum(['1', '2', '3']),
+  reporterId: z.string().min(1, 'Reporter ID is required'),
   notes: z.string().optional(),
 })
 
@@ -90,9 +91,10 @@ export function ReportDiseaseModal() {
       species: '',
       location: '',
       region: '',
-      affectedCount: 0,
+      affectedCount: 1,
       mortalityCount: 0,
       priority: '2',
+      reporterId: '',
       notes: '',
     },
   })
@@ -101,13 +103,18 @@ export function ReportDiseaseModal() {
     setIsSubmitting(true)
     try {
       const result = await api.submitReport({
-        ...data,
-        priority: Number(data.priority) as 1 | 2 | 3,
+        disease_name: data.diseaseName,
+        location: data.location,
+        reporter_id: data.reporterId,
+        mortality_count: data.mortalityCount,
+        // latitude and longitude can be added later if needed
       })
       if (result.success) {
         setOpen(false)
         setStep(1)
         form.reset()
+        // Dispatch event to refresh triage data
+        window.dispatchEvent(new CustomEvent('reportSubmitted'))
       }
     } catch (error) {
       console.error('Failed to submit report:', error)
@@ -121,7 +128,7 @@ export function ReportDiseaseModal() {
     if (step === 1) {
       isValid = await form.trigger(['diseaseName', 'species'])
     } else if (step === 2) {
-      isValid = await form.trigger(['location', 'region', 'affectedCount', 'mortalityCount'])
+      isValid = await form.trigger(['location', 'region', 'reporterId', 'affectedCount', 'mortalityCount'])
     }
     if (isValid) {
       setStep(step + 1)
@@ -282,6 +289,20 @@ export function ReportDiseaseModal() {
                     )}
                   />
                 </div>
+
+                <FormField
+                  control={form.control}
+                  name="reporterId"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Reporter ID</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Enter your reporter ID" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
                 <div className="grid grid-cols-2 gap-4">
                   <FormField

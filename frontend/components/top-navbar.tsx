@@ -4,14 +4,6 @@ import * as React from 'react'
 import { Search, Bell, User } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from '@/components/ui/command'
 import { SidebarTrigger } from '@/components/ui/sidebar'
 import { Badge } from '@/components/ui/badge'
 import { Kbd } from '@/components/ui/kbd'
@@ -62,38 +54,39 @@ export function TopNavbar({ onDiseaseSelect }: TopNavbarProps) {
     <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
       <SidebarTrigger className="-ml-1" />
       <div className="flex flex-1 items-center gap-2">
-        {/* Disease Search */}
+        {/* Disease Search - Simplified to avoid hydration mismatch */}
         <div className="relative">
-          <Command className="w-80">
-            <CommandInput
+          <div className="relative w-80">
+            <input
+              type="text"
               placeholder="Search diseases..."
-              className="h-9"
+              className="flex h-9 w-full rounded-md bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
               onFocus={() => setOpen(true)}
               onBlur={() => setTimeout(() => setOpen(false), 200)}
             />
-            {open && (
-              <div className="absolute top-full z-50 w-full rounded-md border bg-popover p-0 shadow-md">
-                <CommandList>
-                  <CommandEmpty>No diseases found.</CommandEmpty>
-                  <CommandGroup heading="Diseases">
-                    {diseases.map((d) => (
-                      <CommandItem
-                        key={d.id}
-                        value={d.name}
-                        onSelect={() => handleDiseaseSelect(d.name)}
-                      >
-                        <Search className="mr-2 h-4 w-4" />
-                        <span>{d.name}</span>
-                        <Badge variant="secondary" className="ml-auto text-xs">
-                          {d.category}
-                        </Badge>
-                      </CommandItem>
-                    ))}
-                  </CommandGroup>
-                </CommandList>
+            <Search className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          </div>
+
+          {open && diseases.length > 0 && (
+            <div className="absolute top-full z-50 w-full mt-1 rounded-md border bg-popover p-1 shadow-md">
+              <div className="px-2 py-1.5 text-sm font-medium text-muted-foreground">
+                Diseases
               </div>
-            )}
-          </Command>
+              {diseases.slice(0, 5).map((d) => (
+                <div
+                  key={d.id}
+                  className="flex items-center px-2 py-1.5 text-sm cursor-pointer hover:bg-accent hover:text-accent-foreground rounded-sm"
+                  onClick={() => handleDiseaseSelect(d.name)}
+                >
+                  <Search className="mr-2 h-4 w-4" />
+                  <span>{d.name}</span>
+                  <Badge variant="secondary" className="ml-auto text-xs">
+                    {d.category}
+                  </Badge>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Keyboard Shortcut */}

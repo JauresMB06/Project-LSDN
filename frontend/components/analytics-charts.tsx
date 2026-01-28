@@ -21,46 +21,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart'
 import { api } from '@/lib/api'
 
-// State for analytics data
-const [speciesData, setSpeciesData] = useState<any[]>([])
-const [loading, setLoading] = useState(true)
-
-// Fetch species analytics data
-useEffect(() => {
-  const fetchSpeciesData = async () => {
-    try {
-      setLoading(true)
-      const response = await fetch('http://localhost:8000/api/analytics/species')
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`)
-      }
-      const data = await response.json()
-
-      // Transform API data to chart format
-      const transformedData = data.species_data.map((species: any) => ({
-        species: species.species,
-        affected: species.affected_animals,
-        mortality: species.total_mortality,
-      }))
-      setSpeciesData(transformedData)
-    } catch (err) {
-      console.error('Failed to fetch species analytics:', err)
-      // Fallback to mock data if API fails
-      setSpeciesData([
-        { species: 'Cattle', affected: 4250, mortality: 185 },
-        { species: 'Poultry', affected: 12500, mortality: 890 },
-        { species: 'Swine', affected: 2100, mortality: 145 },
-        { species: 'Sheep', affected: 1850, mortality: 78 },
-        { species: 'Goats', affected: 1420, mortality: 52 },
-      ])
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  fetchSpeciesData()
-}, [])
-
 // Mock data for components that don't have API yet
 const diseaseDistribution = [
   { name: 'African Swine Fever', value: 320, fill: 'hsl(var(--chart-1))' },
@@ -231,6 +191,45 @@ export function TimeSeriesChart() {
 }
 
 export function SpeciesImpactChart() {
+  const [speciesData, setSpeciesData] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
+
+  // Fetch species analytics data
+  useEffect(() => {
+    const fetchSpeciesData = async () => {
+      try {
+        setLoading(true)
+        const response = await fetch('http://localhost:8000/api/analytics/species')
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`)
+        }
+        const data = await response.json()
+
+        // Transform API data to chart format
+        const transformedData = data.species_data.map((species: any) => ({
+          species: species.species,
+          affected: species.affected_animals,
+          mortality: species.total_mortality,
+        }))
+        setSpeciesData(transformedData)
+      } catch (err) {
+        console.error('Failed to fetch species analytics:', err)
+        // Fallback to mock data if API fails
+        setSpeciesData([
+          { species: 'Cattle', affected: 4250, mortality: 185 },
+          { species: 'Poultry', affected: 12500, mortality: 890 },
+          { species: 'Swine', affected: 2100, mortality: 145 },
+          { species: 'Sheep', affected: 1850, mortality: 78 },
+          { species: 'Goats', affected: 1420, mortality: 52 },
+        ])
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchSpeciesData()
+  }, [])
+
   if (loading) {
     return (
       <Card className="border-border/50 bg-card/50">

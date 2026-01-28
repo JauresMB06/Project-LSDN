@@ -324,21 +324,23 @@ class LDSNService:
     def autocomplete_symptoms(self, prefix: str) -> SymptomResult:
         """
         Autocomplete disease symptoms using the Trie.
-        
+
         Complexity: O(L) where L is the prefix length
-        
+
         Args:
             prefix: The prefix to search for
-            
+
         Returns:
             SymptomResult with matching terms
-            
-        Raises:
-            ValueError: If prefix is None or empty
+
+        Notes:
+            If prefix is empty, returns top priority diseases from Cameroon context
         """
         if not prefix or not prefix.strip():
-            raise ValueError("Prefix cannot be empty")
-        
+            # Return top priority diseases for empty prefix
+            matches = CAMEROON_PRIORITY_DISEASES[:20]  # Limit to 20 suggestions
+            return SymptomResult(matches=matches, prefix="")
+
         matches = self.trie.autocomplete(prefix.strip().lower())
         return SymptomResult(matches=matches, prefix=prefix)
     
@@ -610,7 +612,7 @@ class LDSNService:
     def get_mortality_statistics(self) -> MortalityResult:
         """
         Get mortality statistics by season.
-        
+
         Returns:
             MortalityResult with dry and rainy season totals
         """
@@ -619,6 +621,15 @@ class LDSNService:
             rainy_season_total=self.mortality.get_rainy_season_mortality(),
             total=self.mortality.get_total_mortality(),
         )
+
+    def get_species_mortality_data(self) -> List[Dict[str, Any]]:
+        """
+        Get species-specific mortality data from Segment Tree.
+
+        Returns:
+            List of dictionaries with species mortality data
+        """
+        return self.mortality.get_all_species_data()
     
     # -------------------------------------------------------------------------
     # Persistence Services (SQLAlchemy)

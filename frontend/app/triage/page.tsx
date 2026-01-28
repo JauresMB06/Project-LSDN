@@ -15,45 +15,56 @@ export default function TriagePage() {
   const [error, setError] = useState<string | null>(null)
 
   // Fetch triage data from the new API endpoint
-  useEffect(() => {
-    const fetchTriageData = async () => {
-      try {
-        setLoading(true)
-        // Use the new triage endpoint
-        const response = await fetch('http://localhost:8000/api/triage?limit=50')
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`)
-        }
-        const data = await response.json()
-
-        // Convert API response to DiseaseReport format
-        const formattedReports: DiseaseReport[] = data.map((alert: any) => ({
-          id: alert.id.toString(),
-          diseaseName: alert.disease_name,
-          location: alert.location,
-          region: alert.location,
-          coordinates: { lat: 0, lng: 0 },
-          reportedAt: new Date(alert.timestamp * 1000).toISOString(),
-          priority: alert.priority_level as 1 | 2 | 3,
-          status: alert.priority_level === 1 ? 'critical' :
-                  alert.priority_level === 2 ? 'escalated' : 'controlled',
-          affectedCount: 1,
-          mortalityCount: 0,
-          reporter: alert.reporter_id,
-          species: 'Unknown'
-        }))
-
-        setReports(formattedReports)
-      } catch (err) {
-        console.error('Failed to fetch triage data:', err)
-        setError('Failed to load triage data. Please check if the backend is running.')
-        setReports([])
-      } finally {
-        setLoading(false)
+  const fetchTriageData = async () => {
+    try {
+      setLoading(true)
+      // Use the new triage endpoint
+      const response = await fetch('http://localhost:8000/api/triage?limit=50')
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
       }
+      const data = await response.json()
+
+      // Convert API response to DiseaseReport format
+      const formattedReports: DiseaseReport[] = data.map((alert: any, index: number) => ({
+        id: `${alert.timestamp}_${index}`, // Create unique ID combining timestamp and index
+        diseaseName: alert.disease_name,
+        location: alert.location,
+        region: alert.location,
+        coordinates: { lat: 0, lng: 0 },
+        reportedAt: new Date(alert.timestamp * 1000).toISOString(),
+        priority: alert.priority_level as 1 | 2 | 3,
+        status: alert.priority_level === 1 ? 'critical' :
+                alert.priority_level === 2 ? 'escalated' : 'controlled',
+        affectedCount: 1,
+        mortalityCount: 0,
+        reporter: alert.reporter_id,
+        species: 'Unknown'
+      }))
+
+      setReports(formattedReports)
+    } catch (err) {
+      console.error('Failed to fetch triage data:', err)
+      setError('Failed to load triage data. Please check if the backend is running.')
+      setReports([])
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchTriageData()
+
+    // Listen for report submission events
+    const handleReportSubmitted = () => {
+      fetchTriageData()
     }
 
-    fetchTriageData()
+    window.addEventListener('reportSubmitted', handleReportSubmitted)
+
+    return () => {
+      window.removeEventListener('reportSubmitted', handleReportSubmitted)
+    }
   }, [])
 
   const handleStatusChange = (id: string, newStatus: DiseaseReport['status']) => {

@@ -132,71 +132,37 @@ async def get_triage_alerts(
 @router.get("/api/analytics/species", response_model=AnalyticsSpeciesResponse)
 async def get_species_analytics():
     """
-    Get species-specific mortality analytics.
+    Get species-specific mortality analytics using Segment Tree.
 
     Returns mortality data broken down by species (cattle, poultry, swine, sheep, goats).
-    Includes seasonal breakdowns and mortality rates.
+    Uses Segment Tree range queries for accurate seasonal breakdowns.
 
     Returns:
-        Species-specific analytics data
+        Species-specific analytics data from Segment Tree
     """
     service = get_service()
 
-    # Mock species data - in a real implementation, this would come from the database
-    # The segment tree currently tracks total mortality, but we need to extend it for species
-    species_data = [
-        SpeciesMortalityData(
-            species="Cattle",
-            total_mortality=185,
-            dry_season_mortality=120,
-            rainy_season_mortality=65,
-            mortality_rate=4.2,
-            affected_animals=4250,
-            last_updated=datetime.utcnow().isoformat()
-        ),
-        SpeciesMortalityData(
-            species="Poultry",
-            total_mortality=890,
-            dry_season_mortality=450,
-            rainy_season_mortality=440,
-            mortality_rate=17.8,
-            affected_animals=12500,
-            last_updated=datetime.utcnow().isoformat()
-        ),
-        SpeciesMortalityData(
-            species="Swine",
-            total_mortality=145,
-            dry_season_mortality=80,
-            rainy_season_mortality=65,
-            mortality_rate=28.9,
-            affected_animals=2100,
-            last_updated=datetime.utcnow().isoformat()
-        ),
-        SpeciesMortalityData(
-            species="Sheep",
-            total_mortality=78,
-            dry_season_mortality=45,
-            rainy_season_mortality=33,
-            mortality_rate=6.2,
-            affected_animals=1850,
-            last_updated=datetime.utcnow().isoformat()
-        ),
-        SpeciesMortalityData(
-            species="Goats",
-            total_mortality=52,
-            dry_season_mortality=30,
-            rainy_season_mortality=22,
-            mortality_rate=5.8,
-            affected_animals=1420,
-            last_updated=datetime.utcnow().isoformat()
-        )
-    ]
+    # Get real species data from the service's segment tree
+    species_data = service.get_species_mortality_data()
 
-    total_mortality = sum(s.total_mortality for s in species_data)
-    total_affected = sum(s.affected_animals for s in species_data)
+    # Convert to API response format
+    api_species_data = []
+    for species in species_data:
+        api_species_data.append(SpeciesMortalityData(
+            species=species['species'],
+            total_mortality=species['total_mortality'],
+            dry_season_mortality=species['dry_season_mortality'],
+            rainy_season_mortality=species['rainy_season_mortality'],
+            mortality_rate=species['mortality_rate'],
+            affected_animals=species['affected_animals'],
+            last_updated=species['last_updated']
+        ))
+
+    total_mortality = sum(s.total_mortality for s in api_species_data)
+    total_affected = sum(s.affected_animals for s in api_species_data)
 
     return AnalyticsSpeciesResponse(
-        species_data=species_data,
+        species_data=api_species_data,
         total_mortality=total_mortality,
         total_affected=total_affected,
         timestamp=datetime.utcnow().isoformat()
@@ -204,7 +170,7 @@ async def get_species_analytics():
 
 @router.get("/api/trie/autocomplete", response_model=TrieAutocompleteResponse)
 async def trie_autocomplete(
-    prefix: str = Query(..., min_length=1, max_length=50, description="Prefix to search for"),
+    prefix: str = Query("", min_length=0, max_length=50, description="Prefix to search for"),
     limit: int = Query(10, ge=1, le=50, description="Maximum number of suggestions")
 ):
     """
